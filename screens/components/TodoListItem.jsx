@@ -1,30 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
+import { Text, TextInput } from "react-native";
+
 import { styled } from "styled-components/native";
 import Feather from "react-native-vector-icons/Feather";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
-function TodoListItem({ todo, onPressCheck, onPressDelete }) {
+function TodoListItem({ todo, onPressCheck, onPressDelete, onPressModify }) {
   const { id, content, date, complete } = todo;
 
   const [form, setForm] = useState(content);
+  const [isInputMode, setInputMode] = useState(false); // input 모드 여부를 저장하는 상태 추가
+
+  const changeToInput = () => {
+    setInputMode(true); // input 모드를 활성화
+  };
+
+  const changeToText = () => {
+    setInputMode(false); // input 모드를 비활성화
+    // form 값으로 content를 업데이트 (수정한 내용을 반영)
+    onPressModify(id, form);
+  };
 
   return (
     <Container>
       <CheckBox onPress={() => onPressCheck(id)}>
         {complete && <Feather name={"check"} size={12} />}
       </CheckBox>
-      <ContentGroup>
-        <Content>{content}</Content>
-        <Date>{date}</Date>
-      </ContentGroup>
 
-      {/* 여기에서 이제 form으로 바뀐부분을 다시 배열 속에 수정해서 해야함
-        모든 수정은 부모 컨테스트에서 만들어진 함수를 사용해서 하고 있는 거임.
-      */}
-      <TextInput value={form} onChangeText={setForm} />
+      {/* 수정 버튼에 따라 input 모드와 text 모드를 전환 */}
+      {isInputMode ? (
+        <TextInputBox
+          value={form}
+          onChangeText={setForm}
+          onBlur={changeToText} //onBlur는 엘리먼트에서 포커스가 사라졌을때 호출됨 (ex. 바깥 영역 클릭)
+        />
+      ) : (
+        <ContentGroup>
+          <Content>{content}</Content>
+          <Date>{date}</Date>
+        </ContentGroup>
+      )}
 
-      <MaterialCommunityIcons name={"pencil"} size={20} color={"#00948A"} />
+      <MaterialCommunityIcons
+        name={"pencil"}
+        size={20}
+        color={"#00948A"}
+        onPress={() => changeToInput()}
+      />
       <FontAwesome5
         name={"trash"}
         size={20}
@@ -59,6 +82,10 @@ const CheckBox = styled.TouchableOpacity`
 `;
 
 const ContentGroup = styled.View`
+  width: 60%;
+`;
+
+const TextInputBox = styled.TextInput`
   width: 60%;
 `;
 

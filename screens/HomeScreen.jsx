@@ -8,19 +8,19 @@ function HomeScreen() {
     {
       id: 1,
       content: "fhdkfhk@jf",
-      date: "1/20/2023",
+      date: "2023-01-20",
       complete: false,
     },
     {
       id: 2,
       content: "dfsd@jf",
-      date: "1/15/2023",
+      date: "2023-01-15",
       complete: false,
     },
     {
       id: 3,
       content: "hgfb@jf",
-      date: "1/240/2023",
+      date: "2023-01-24",
       complete: false,
     },
   ]);
@@ -33,12 +33,10 @@ function HomeScreen() {
     const newTodo = {
       id: todos.length + 1,
       content: content,
-      date: new Date().toISOString,
+      date: new Date().toISOString(),
       complete: false,
     };
 
-    // ...연산자는 객체가 하나씩 넘어노는 것
-    // 이 경우에는 ...prev는 todos[0], todos[1], todos[2] 랑 동일 의미
     setTodos((prev) => [...prev, newTodo]);
     setContent("");
   };
@@ -56,6 +54,15 @@ function HomeScreen() {
     setTodos((prev) => prev.filter((todo) => todo.id !== todoId));
   };
 
+  const onPressModify = (todoId, todoForm) => {
+    setTodos((prev) =>
+      prev.map((todo) => ({
+        ...todo,
+        content: todo.id === todoId ? todoForm : todo.content,
+      }))
+    );
+  };
+
   return (
     <Container>
       <TodoInsert
@@ -67,6 +74,7 @@ function HomeScreen() {
         todos={todos}
         onPressCheck={onPressCheck}
         onPressDelete={onPressDelete}
+        onPressModify={onPressModify}
       />
     </Container>
   );

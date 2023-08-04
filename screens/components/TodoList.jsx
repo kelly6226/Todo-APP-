@@ -2,7 +2,7 @@ import React from "react";
 import { styled } from "styled-components/native";
 import TodoListItem from "./TodoListItem";
 
-function TodoList({ todos, onPressCheck, onPressDelete }) {
+function TodoList({ todos, onPressCheck, onPressDelete, onPressModify }) {
   return (
     <Container>
       {todos.map((todo) => (
@@ -11,6 +11,7 @@ function TodoList({ todos, onPressCheck, onPressDelete }) {
           todo={todo}
           onPressCheck={onPressCheck}
           onPressDelete={onPressDelete}
+          onPressModify={onPressModify}
         />
       ))}
     </Container>
